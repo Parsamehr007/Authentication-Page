@@ -3,6 +3,7 @@ import time
 import re
 import json
 import bcrypt
+from randoom import password
 
 data_file = "data.json"
 if not os.path.exists(data_file):
@@ -33,6 +34,7 @@ def login():
     password = input("password : ")
     if username in data and check_password(password, data[username].encode("utf-8")) :
         print("loging in")
+        user_menu(username)
     else:
         print("username or password are incorrect")
 
@@ -43,6 +45,7 @@ def user_menu(username):
         print("1: Show Profile")
         print("2: Edit Profile")
         print("3: Log Out")
+        print("4: Delete Account")
         choice = input("Choose an option: ")
 
         if choice == "1":
@@ -62,10 +65,51 @@ def user_menu(username):
         elif choice == "3":
             print("Logging out...")
             break
+        elif choice == "4":
+            print("are you sore you want to delete your account?")
+            print("1 : Delete Account")
+            print("2 : get back")
+            choice = input("Choose an option: ")
+            if choice == "1":
+                del data[username]
+                update_file(data)
+                print("Account deleted successfully.")
+                break
+            if choice == "2":
+                break
         else:
             print("Invalid choice. Please try again.")
 
+def admin_panel():
+    while True:
+        print("\nAdmin Panel:")
+        print("1: Create Account")
+        print("2: Edit Account")
+        print("3: view users list")
+        print("4: Delete Account")
+        print("5: Log Out")
+        choice = input("Choose an option: ")
+        if choice == "1":
+            signup()
+        if choice == "2":
+            pass
 
+
+def edit_account():
+    data = load_file()
+    username = input("Username: ")
+    if username in data:
+        print("do you want to edit your username or password?")
+        print("1: Username")
+        print("2: Password")
+        choice = input("Choose an option: ")
+        if choice == "1":
+            new_username = input("username: ")
+            if new_username not in data :
+                data[new_username] = data.pop(username)
+                print("username has been successfully edited.")
+    else :
+        print("username invalid")
 def signup():
     data = load_file()
     username_regex = r"^(?=[a-zA-Z0-9._]{4,20}$)"
