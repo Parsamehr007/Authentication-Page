@@ -36,6 +36,35 @@ def login():
     else:
         print("username or password are incorrect")
 
+def user_menu(username):
+    data = load_file()
+    while True:
+        print("\nUser Menu:")
+        print("1: Show Profile")
+        print("2: Edit Profile")
+        print("3: Log Out")
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            # Show Profile
+            print(f"Username: {username}")
+            print(f"Password (hashed): {data[username]}")  # نمایش هش پسورد
+        elif choice == "2":
+            # Edit Profile
+            new_password = input("Enter new password: ")
+            password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+            if re.match(password_regex, new_password):
+                data[username] = hash_password(new_password).decode("utf-8")
+                update_file(data)
+                print("Profile updated successfully.")
+            else:
+                print("Invalid password format. Must include uppercase, lowercase, number, and special character.")
+        elif choice == "3":
+            print("Logging out...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
 
 def signup():
     data = load_file()
