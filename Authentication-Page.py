@@ -3,7 +3,8 @@ import time
 import re
 import json
 import bcrypt
-from randoom import password
+
+admins = {b'$2b$12$UfWUTl04d1QxZWzHceUu1eeMJu2T.u2NWYDyR9MIypkuKtySwg4kC' : b'$2b$12$IrGt5dCyYxp6rKYaHLe1NOYrp4pUHAsZeUtM3NnjQsONr1G9KLxfa'}
 
 data_file = "data.json"
 if not os.path.exists(data_file):
@@ -32,6 +33,10 @@ def login():
     data = load_file()
     username = input("username : ")
     password = input("password : ")
+    # print(username.encode("utf-8") in admins )
+    # if hash_password(username) in admins and check_password(password, admins[hash_password(username)]):
+    #     admin_panel()
+    # else :
     if username in data and check_password(password, data[username].encode("utf-8")) :
         print("loging in")
         user_menu(username)
@@ -81,41 +86,41 @@ def user_menu(username):
             print("Invalid choice. Please try again.")
 
 def admin_panel():
-            data = load_file()
-            while True:
-                print("\nAdmin Panel:")
-                print("1: Create Account")
-                print("2: Edit Account")
-                print("3: View Users List")
-                print("4: Delete Account")
-                print("5: Log Out")
-                choice = input("Choose an option: ")
+    data = load_file()
+    while True:
+        print("\nAdmin Panel:")
+        print("1: Create Account")
+        print("2: Edit Account")
+        print("3: View Users List")
+        print("4: Delete Account")
+        print("5: Log Out")
+        choice = input("Choose an option: ")
 
-                if choice == "1":
-                    signup()
-                elif choice == "2":
-                    edit_account()
-                elif choice == "3":
-                    print("Users List:")
-                    for username in data.keys():
-                        print(username)
-                elif choice == "4":
-                    username = input("Enter the username you want to delete: ")
-                    if username in data:
-                        confirmation = input(f"Are you sure you want to delete the account for {username}? (yes/no) ")
-                        if confirmation.lower() == 'yes':
-                            del data[username]
-                            update_file(data)
-                            print("Account deleted successfully.")
-                        else:
-                            print("Deletion cancelled.")
-                    else:
-                        print("Username not found.")
-                elif choice == "5":
-                    print("Logging out...")
-                    break
+        if choice == "1":
+            signup()
+        elif choice == "2":
+            edit_account()
+        elif choice == "3":
+            print("Users List:")
+            for username in data.keys():
+                print(username)
+        elif choice == "4":
+            username = input("Enter the username you want to delete: ")
+            if username in data:
+                confirmation = input(f"Are you sure you want to delete the account for {username}? (yes/no) ")
+                if confirmation.lower() == 'yes':
+                    del data[username]
+                    update_file(data)
+                    print("Account deleted successfully.")
                 else:
-                    print("Invalid choice. Please try again.")
+                    print("Deletion cancelled.")
+            else:
+                print("Username not found.")
+        elif choice == "5":
+            print("Logging out...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 def edit_account():
     data = load_file()
@@ -175,5 +180,7 @@ def main():
         else :
             print("wrong input")
         time.sleep(3)
+
 main()
 
+print(hash_password("admin"))
