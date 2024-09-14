@@ -81,19 +81,41 @@ def user_menu(username):
             print("Invalid choice. Please try again.")
 
 def admin_panel():
-    while True:
-        print("\nAdmin Panel:")
-        print("1: Create Account")
-        print("2: Edit Account")
-        print("3: view users list")
-        print("4: Delete Account")
-        print("5: Log Out")
-        choice = input("Choose an option: ")
-        if choice == "1":
-            signup()
-        if choice == "2":
-            pass
+            data = load_file()
+            while True:
+                print("\nAdmin Panel:")
+                print("1: Create Account")
+                print("2: Edit Account")
+                print("3: View Users List")
+                print("4: Delete Account")
+                print("5: Log Out")
+                choice = input("Choose an option: ")
 
+                if choice == "1":
+                    signup()
+                elif choice == "2":
+                    edit_account()
+                elif choice == "3":
+                    print("Users List:")
+                    for username in data.keys():
+                        print(username)
+                elif choice == "4":
+                    username = input("Enter the username you want to delete: ")
+                    if username in data:
+                        confirmation = input(f"Are you sure you want to delete the account for {username}? (yes/no) ")
+                        if confirmation.lower() == 'yes':
+                            del data[username]
+                            update_file(data)
+                            print("Account deleted successfully.")
+                        else:
+                            print("Deletion cancelled.")
+                    else:
+                        print("Username not found.")
+                elif choice == "5":
+                    print("Logging out...")
+                    break
+                else:
+                    print("Invalid choice. Please try again.")
 
 def edit_account():
     data = load_file()
